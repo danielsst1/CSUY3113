@@ -1,0 +1,6 @@
+E:\GameProgramming\Notes\VisualStudioSDLProject\SDLProject\Debug\SDLProject.exe
+E:\GameProgramming\Notes\VisualStudioSDLProject\SDLProject\Debug\SDLProject.pdb
+E:\Documents\GameProgramming2020\Notes\VisualStudioSDLProject\SDLProject\Debug\SDLProject.exe
+E:\Documents\GameProgramming2020\Notes\VisualStudioSDLProject\SDLProject\Debug\SDLProject.pdb
+E:\Documents\GameProgramming2020\CSUY3113\P1\Debug\SDLProject.exe
+E:\Documents\GameProgramming2020\CSUY3113\P1\Debug\SDLProject.pdb
