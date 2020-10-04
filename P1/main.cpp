@@ -108,9 +108,7 @@ void Update() {
     prof_rotate += 90.0f * deltaTime;
 
     modelMatrix = glm::mat4(1.0f);
-    //modelMatrix = glm::translate(modelMatrix, glm::vec3(-0.0f, -3.25f, 0.0f));
     modelMatrix = glm::translate(modelMatrix, glm::vec3(robo_x, -3.25f, 0.0f));
-    //modelMatrix = glm::rotate(modelMatrix, glm::radians(prof_rotate), glm::vec3(0.0f, 0.0f, 1.0f));
 
     profMatrix = glm::mat4(1.0f);
     profMatrix = glm::translate(profMatrix, glm::vec3(prof_x, -1.25f, 0.0f));
@@ -144,7 +142,7 @@ void Render() {
 
     glClear(GL_COLOR_BUFFER_BIT);
     //program.SetModelMatrix(modelMatrix);
-    
+      
     glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
     glEnableVertexAttribArray(program.positionAttribute);
 
