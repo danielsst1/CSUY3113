@@ -176,13 +176,7 @@ void Entity::Render(ShaderProgram* program) {
 
     glBindTexture(GL_TEXTURE_2D, textureID);
 
-    float texCoords[] = { 0.0, 1.0, 
-                        1.0, 1.0, 
-                        1.0, 0.0, 
-                        0.0, 1.0, 
-                        1.0, 0.0, 
-                        0.0, 0.0 };
-
+    //verticey coordinates
     if (entityType == EntityType::PLAYER) {
         float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
         glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
@@ -200,19 +194,9 @@ void Entity::Render(ShaderProgram* program) {
         float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
         glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
     }
-
-
-
-    //glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
     glEnableVertexAttribArray(program->positionAttribute);
 
-    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
-    glEnableVertexAttribArray(program->texCoordAttribute);
-
-    /*float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
-    glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-    glEnableVertexAttribArray(program->positionAttribute);
-
+    //texture coordinates
     if (entityType == EntityType::PLAYER) {
         float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
         glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
@@ -232,8 +216,9 @@ void Entity::Render(ShaderProgram* program) {
     }    
 
     //glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
-    glEnableVertexAttribArray(program->texCoordAttribute);*/
+    glEnableVertexAttribArray(program->texCoordAttribute);
 
+    //
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glDisableVertexAttribArray(program->positionAttribute);
