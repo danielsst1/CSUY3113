@@ -345,7 +345,7 @@ void Render() {
 
 
 
-    //DrawText(&program, fontTextureID, "Game", 0.5f, -0.25f, glm::vec3(-4.75f, 3.3f, 0));
+    DrawText(&program, fontTextureID, "Game", 0.5f, -0.25f, glm::vec3(-4.75f, 3.3f, 0));
 
     if (mode == GameMode::WIN) {
         DrawText(&program, fontTextureID, "Mission Successful", 0.5f, -0.25f, glm::vec3(-2.5f, 0.0f, 0));

@@ -202,8 +202,8 @@ void Entity::Render(ShaderProgram* program) {
         glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
     }
     else if (entityType == EntityType::PLATFORM) {
-        float texCoords[] = { 0.0, height, 
-                            width, height, 
+        float texCoords[] = { 0.0, height,
+                            width, height,
                             width, 0.0,
                             0.0, height,
                             width, 0.0,
@@ -213,7 +213,7 @@ void Entity::Render(ShaderProgram* program) {
     else { // default vertices
         float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
         glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
-    }    
+    }
 
     //glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
     glEnableVertexAttribArray(program->texCoordAttribute);

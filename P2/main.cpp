@@ -4,7 +4,9 @@
 #include <GL/glew.h>
 #endif
 
-#define GL_GLEXT_PROTOTYPES 1
+#define GL_GLEXT_PROTOTYPES 
+
+#include <SDL_mixer.h>
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include "glm/mat4x4.hpp"
@@ -51,9 +53,11 @@ float left = -5.0f;
 float top = 3.75f;
 float bottom = -3.75f;
 
+Mix_Music *music;
+Mix_Chunk* bounce;
 
 void Initialize() {
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     displayWindow = SDL_CreateWindow("Pong - Press Space to Start or Pause Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
@@ -65,6 +69,14 @@ void Initialize() {
     glViewport(0, 0, 640, 480);
 
     program.Load("shaders/vertex.glsl", "shaders/fragment.glsl");
+
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+    music = Mix_LoadMUS("dooblydoo.mp3");
+    Mix_PlayMusic(music, -1);
+    Mix_VolumeMusic(MIX_MAX_VOLUME * 0.10f);
+
+    bounce = Mix_LoadWAV("bounce.wav");
+
 
     viewMatrix = glm::mat4(1.0f);
     player1Matrix = glm::mat4(1.0f);
@@ -301,6 +313,18 @@ void Update() {
     //bounce off side of right side of left paddle
     else if (shouldBounceOffRight(player1_position.x, player1_position.y)) {
         ball_movement.x = abs(ball_movement.x);
+    }
+
+    //play sound
+    if (!isInBoundsTop(ball_position.y, ball_height) ||
+        !isInBoundsBottom(ball_position.y, ball_height) ||
+        shouldBounceOffTop(player1_position.x, player1_position.y) ||
+        shouldBounceOffTop(player2_position.x, player2_position.y) ||
+        shouldBounceOffBottom(player1_position.x, player1_position.y) ||
+        shouldBounceOffBottom(player2_position.x, player2_position.y) ||
+        shouldBounceOffLeft(player2_position.x, player2_position.y) ||
+        shouldBounceOffRight(player1_position.x, player1_position.y)) {
+        Mix_PlayChannel(-1, bounce, 0);
     }
     
 
