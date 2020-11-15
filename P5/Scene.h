@@ -22,6 +22,8 @@ struct GameState {
 	Entity* player;
 	Entity* enemies;
 	int nextScene;
+	int sceneNum;
+	int lives;
 };
 
 class Scene {
@@ -29,9 +31,17 @@ public:
 	Mix_Music* music;
 	Mix_Chunk* jump;
 
+	GLuint fontTextureID;
+
 	GameState state;
 	virtual void Initialize() = 0;
 	virtual void Update(float deltaTime) = 0;
 	virtual void playJumpSound() = 0;
 	virtual void Render(ShaderProgram* program) = 0;
+
+	virtual int setLives(int num) = 0;
+	virtual int getLives() = 0;
+	virtual int loseLife() = 0;
+
+	virtual void stopMotion() = 0;
 };

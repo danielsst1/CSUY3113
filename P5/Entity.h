@@ -15,8 +15,8 @@
 
 enum EntityType {PLAYER, PLATFORM, ENEMY};
 
-enum AIType { WALKER, WAITANDGO };
-enum AIState { IDLE, WALKING, ATTACKING };
+enum AIType { WALKER, WAITANDGO, STUCK };
+enum AIState { IDLE, WALKING, ATTACKING, DEAD };
 
 class Entity {
 public:
@@ -61,18 +61,20 @@ public:
     bool collidedRight = false;
 
     Entity();
-
+    void StopMovement();
     bool CheckCollision(Entity *other);
-    void CheckCollisionsY(Entity *objects, int objectCount);
-    void CheckCollisionsX(Entity* objects, int objectCount);
+    int CheckCollisionsY(Entity *objects, int objectCount);
+    int CheckCollisionsX(Entity* objects, int objectCount);
     void CheckCollisionsY(Map* map);
     void CheckCollisionsX(Map* map);
     
-    void Update(float deltaTime, Entity *player, Entity* objects, int objectCount, Map *map);
+    int Update(float deltaTime, Entity *player, Entity* objects, int objectCount, Map *map);
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
 
     void AI(Entity *player);
-    void AIWalker();
+    void AIWalker(Entity* player);
     void AIWaitAndGo(Entity *player);
+    void AIStuck(Entity* player);
+    void killAI();
 };

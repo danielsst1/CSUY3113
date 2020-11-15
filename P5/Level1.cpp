@@ -10,13 +10,16 @@ unsigned int level1_data[] =
  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
  3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
- 3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
- 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+ 3, 1, 1, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 2,
+ 3, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2
 };
 
+Level1::gameMode mode;
 void Level1::Initialize() {
+    state.sceneNum = 1;
+
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
     music = Mix_LoadMUS("dooblydoo.mp3");
     Mix_PlayMusic(music, -1);
@@ -27,6 +30,8 @@ void Level1::Initialize() {
 
 	GLuint mapTextureID = Util::LoadTexture("tileset.png");
 	state.map = new Map(LEVEL1_WIDTH, LEVEL1_HEIGHT, level1_data, mapTextureID, 1.0f, 4, 1);
+
+    fontTextureID = Util::LoadTexture("font1.png");
 
     // Initialize game objects
     // Initialize Player
@@ -60,19 +65,27 @@ void Level1::Initialize() {
 
     state.enemies[0].entityType = ENEMY;
     state.enemies[0].textureID = enemyTextureID;
-    state.enemies[0].position = glm::vec3(4, 2.25, 0);
+    state.enemies[0].position = glm::vec3(1, 0, 0);
     state.enemies[0].speed = 1;
     state.enemies[0].acceleration = glm::vec3(0, -9.81f, 0);
     state.enemies[0].aiType = WAITANDGO;
     state.enemies[0].aiState = IDLE;
+
+    mode = PLAY;
 }
 
 void Level1::Update(float deltaTime) {
 	state.player->Update(deltaTime, state.player, state.enemies, LEVEL1_ENEMY_COUNT, state.map);
 
+    for (int i = 0; i < LEVEL1_ENEMY_COUNT; i++) {
+        state.enemies[i].Update(deltaTime, state.player, state.enemies, LEVEL1_ENEMY_COUNT, state.map);
+    }
+
+    if (state.player->position.y < -8.1f) loseLife();
+
     //triggers moving to next scene
     if (state.player->position.x >= 12) {
-        state.nextScene = 1;
+        state.nextScene = 2;
     }
 }
 
@@ -82,5 +95,56 @@ void Level1::playJumpSound() {
 
 void Level1::Render(ShaderProgram* program) {
 	state.map->Render(program);
-	state.player->Render(program);
+    for (int i = 0; i < LEVEL1_ENEMY_COUNT; i++) {
+        state.enemies->Render(program);
+    }
+
+    state.player->Render(program);
+    //Util::DrawText(program, fontTextureID, std::to_string(state.player->position.x) + std::to_string(state.player->position.y), 0.5f, -0.25f, glm::vec3(state.player->position.x - 2.0f, -2.5f, 0));
+
+    if (state.player->position.x > 5) {
+        Util::DrawText(program, fontTextureID, "Level 1", 0.5f, -0.25f, glm::vec3(state.player->position.x - 4.5f, -0.5f, 0));
+        Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(state.player->position.x + 3.0f, -0.5f, 0));
+
+        if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(state.player->position.x - 1.5f, -2.5f, 0));
+    }
+    else {
+        Util::DrawText(program, fontTextureID, "Level 1", 0.5f, -0.25f, glm::vec3(0.5f, -0.5f, 0));
+        Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(8.0f, -0.5f, 0));
+
+        if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(3.5f, -2.5f, 0));
+    }	
+}
+
+int Level1::setLives(int num) {
+    state.lives = num;
+    return state.lives;
+}
+
+int Level1::getLives() {
+    return state.lives;
+}
+
+int Level1::loseLife() {
+    if (getLives() > 0) state.lives--;
+    
+    if (getLives() == 0) loseGame();
+    else {
+        state.player->position = glm::vec3(5, 0, 0);
+        //state.enemies[0].position = glm::vec3(1, 0, 0);
+    }
+    return state.lives;
+}
+
+void Level1::stopMotion() {
+    state.player->StopMovement();
+
+    for (int i = 0; i < LEVEL1_ENEMY_COUNT; i++) {
+        state.enemies->StopMovement();
+    }
+}
+
+void Level1::loseGame() {
+    stopMotion();
+    mode = LOSE;
 }

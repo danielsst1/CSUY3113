@@ -16,8 +16,10 @@
 #include "Entity.h"
 #include "Map.h"
 #include "Scene.h"
+#include "Menu.h"
 #include "Level1.h"
 #include "Level2.h"
+#include "Level3.h"
 
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
@@ -28,7 +30,12 @@ glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 GLuint fontTextureID;
 
 Scene* currentScene;
-Scene* sceneList[2];
+Scene* sceneList[4];
+
+int lives = 3;
+
+
+
 void SwitchToScene(Scene* scene) {
     currentScene = scene;
     currentScene->Initialize();
@@ -37,7 +44,7 @@ void SwitchToScene(Scene* scene) {
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO);
-    displayWindow = SDL_CreateWindow("Textured!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
+    displayWindow = SDL_CreateWindow("Jump Man", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
 
@@ -65,9 +72,13 @@ void Initialize() {
 
     fontTextureID = Util::LoadTexture("font1.png");
 
-    sceneList[0] = new Level1();
-    sceneList[1] = new Level2();
+    sceneList[0] = new Menu();
+    sceneList[1] = new Level1();
+    sceneList[2] = new Level2();
+    sceneList[3] = new Level3();
     SwitchToScene(sceneList[0]);
+
+    currentScene->setLives(lives);
 }
 
 void ProcessInput() {
@@ -97,6 +108,11 @@ void ProcessInput() {
                     currentScene->state.player->jump = true;
                     currentScene->playJumpSound();
                 }
+                break;
+
+            case SDLK_RETURN:
+                if (currentScene->state.sceneNum == 0) currentScene->state.nextScene = 1;
+                //SwitchToScene(sceneList[currentScene->state.nextScene]);
                 break;
             }
             break; // SDL_KEYDOWN
@@ -139,11 +155,12 @@ void Update() {
 
     while (deltaTime >= FIXED_TIMESTEP) {
         // Update. Notice it's FIXED_TIMESTEP. Not deltaTime
+        
+        currentScene->setLives(lives);
+        lives = currentScene->getLives();
         currentScene->Update(FIXED_TIMESTEP);
-
-        /*for (int i = 0; i < ENEMY_COUNT; i++) {
-            state.enemies[i].Update(FIXED_TIMESTEP, currentScene->state.player, state.platforms, PLATFORM_COUNT);
-        }*/
+        lives = currentScene->getLives();
+        currentScene->setLives(lives);
 
         deltaTime -= FIXED_TIMESTEP;
     }

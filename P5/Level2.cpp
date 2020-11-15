@@ -1,22 +1,24 @@
 #include "Level2.h"
 
-#define Level2_ENEMY_COUNT 1
+#define LEVEL2_ENEMY_COUNT 1
 
-#define Level2_WIDTH 14
-#define Level2_HEIGHT 8
+#define LEVEL2_WIDTH 14
+#define LEVEL2_HEIGHT 8
 unsigned int Level2_data[] =
 {
  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
  3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
  3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
- 3, 1, 1, 1, 1, 1, 1, 0, 3, 3, 3, 3, 3, 3,
- 3, 2, 2, 2, 2, 2, 2, 0, 3, 3, 3, 3, 3, 3
+ 3, 1, 1, 1, 1, 1, 0, 0, 3, 3, 3, 3, 3, 3,
+ 3, 2, 2, 2, 2, 2, 0, 0, 3, 3, 3, 3, 3, 3
 };
-
+Level2::gameMode mode;
 void Level2::Initialize() {
+    state.sceneNum = 2;
+
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
     music = Mix_LoadMUS("dooblydoo.mp3");
     Mix_PlayMusic(music, -1);
@@ -27,7 +29,9 @@ void Level2::Initialize() {
     state.nextScene = -1;
 
     GLuint mapTextureID = Util::LoadTexture("tileset.png");
-    state.map = new Map(Level2_WIDTH, Level2_HEIGHT, Level2_data, mapTextureID, 1.0f, 4, 1);
+    state.map = new Map(LEVEL2_WIDTH, LEVEL2_HEIGHT, Level2_data, mapTextureID, 1.0f, 4, 1);
+
+    fontTextureID = Util::LoadTexture("font1.png");
 
     // Initialize game objects
     // Initialize Player
@@ -56,19 +60,32 @@ void Level2::Initialize() {
 
     state.player->jumpPower = 6.0f;
 
-    state.enemies = new Entity[Level2_ENEMY_COUNT];
+    state.enemies = new Entity[LEVEL2_ENEMY_COUNT];
     GLuint enemyTextureID = Util::LoadTexture("ctg.png");
 
     state.enemies[0].entityType = ENEMY;
     state.enemies[0].textureID = enemyTextureID;
-    state.enemies[0].position = glm::vec3(4, 2.25, 0);
+    state.enemies[0].position = glm::vec3(2, 2.25, 0);
     state.enemies[0].speed = 1;
     state.enemies[0].acceleration = glm::vec3(0, -9.81f, 0);
     state.enemies[0].aiType = WAITANDGO;
     state.enemies[0].aiState = IDLE;
+
+    mode = PLAY;
 }
 void Level2::Update(float deltaTime) {
-    state.player->Update(deltaTime, state.player, state.enemies, Level2_ENEMY_COUNT, state.map);
+    state.player->Update(deltaTime, state.player, state.enemies, LEVEL2_ENEMY_COUNT, state.map);
+
+    for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
+        state.enemies[i].Update(deltaTime, state.player, state.enemies, LEVEL2_ENEMY_COUNT, state.map);
+    }
+
+    if (state.player->position.y < -8.1f) loseLife();
+
+    //triggers moving to next scene
+    if (state.player->position.x >= 12) {
+        state.nextScene = 3;
+    }
 }
 
 void Level2::playJumpSound() {
@@ -77,5 +94,58 @@ void Level2::playJumpSound() {
 
 void Level2::Render(ShaderProgram* program) {
     state.map->Render(program);
+    for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
+        state.enemies->Render(program);
+    }
+    
     state.player->Render(program);
+    
+    if (state.player->position.x > 5) {
+        Util::DrawText(program, fontTextureID, "Level 2", 0.5f, -0.25f, glm::vec3(state.player->position.x - 4.5f, -0.5f, 0));
+        Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(state.lives), 0.5f, -0.25f, glm::vec3(state.player->position.x + 3.0f, -0.5f, 0));
+
+        if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(state.player->position.x - 1.5f, -2.5f, 0));
+    }
+    else {
+        Util::DrawText(program, fontTextureID, "Level 2", 0.5f, -0.25f, glm::vec3(0.5f, -0.5f, 0));
+        Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(state.lives), 0.5f, -0.25f, glm::vec3(8.0f, -0.5f, 0));
+
+        if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(3.5f, -2.5f, 0));
+    }
+
+    
+}
+
+int Level2::setLives(int num) {
+    state.lives = num;
+    return state.lives;
+}
+
+int Level2::getLives() {
+    return state.lives;
+    return state.lives;
+}
+
+int Level2::loseLife() {
+    if (getLives() > 0) state.lives--;
+
+    if (getLives() == 0) loseGame();
+    else {
+        state.player->position = glm::vec3(5, 0, 0);
+        //state.enemies[0].position = glm::vec3(1, 0, 0);
+    }
+    return state.lives;
+}
+
+void Level2::stopMotion() {
+    state.player->StopMovement();
+
+    for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
+        state.enemies->StopMovement();
+    }
+}
+
+void Level2::loseGame() {
+    stopMotion();
+    mode = LOSE;
 }
