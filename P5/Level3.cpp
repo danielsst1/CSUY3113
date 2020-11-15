@@ -75,13 +75,17 @@ void Level3::Initialize() {
 }
 
 void Level3::Update(float deltaTime) {
-    state.player->Update(deltaTime, state.player, state.enemies, LEVEL3_ENEMY_COUNT, state.map);
+    int collisionObj;
+
+    collisionObj = state.player->Update(deltaTime, state.player, state.enemies, LEVEL3_ENEMY_COUNT, state.map);
 
     for (int i = 0; i < LEVEL3_ENEMY_COUNT; i++) {
         state.enemies[i].Update(deltaTime, state.player, state.enemies, LEVEL3_ENEMY_COUNT, state.map);
     }
 
-    if (state.player->position.y < -8.1f) loseLife();
+    //fall off map bottom = -8.1
+    if (state.player->position.y < -8.1f || collisionObj != -1) loseLife();
+
 
     //triggers moving to next scene
     if (state.player->position.x >= 12) {
