@@ -2,18 +2,18 @@
 
 #define LEVEL2_ENEMY_COUNT 1
 
-#define LEVEL2_WIDTH 14
+#define LEVEL2_WIDTH 18
 #define LEVEL2_HEIGHT 8
 unsigned int Level2_data[] =
 {
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3,
- 3, 1, 1, 1, 1, 1, 0, 0, 3, 3, 3, 3, 3, 3,
- 3, 2, 2, 2, 2, 2, 0, 0, 3, 3, 3, 3, 3, 3
+ 3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3, 3, 3, 0, 3, 1, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 1, 3, 3, 3, 3, 3,
+ 3, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+ 3, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
 };
 Level2::gameMode mode;
 void Level2::Initialize() {
@@ -58,17 +58,17 @@ void Level2::Initialize() {
     state.player->height = 0.8f;
     state.player->width = 0.8f;
 
-    state.player->jumpPower = 6.0f;
+    state.player->jumpPower = 6.5f;
 
     state.enemies = new Entity[LEVEL2_ENEMY_COUNT];
-    GLuint enemyTextureID = Util::LoadTexture("ctg.png");
+    GLuint fastEnemyTextureID = Util::LoadTexture("ship.png");
 
     state.enemies[0].entityType = ENEMY;
-    state.enemies[0].textureID = enemyTextureID;
-    state.enemies[0].position = glm::vec3(2, 2.25, 0);
-    state.enemies[0].speed = 1;
-    state.enemies[0].acceleration = glm::vec3(0, -9.81f, 0);
-    state.enemies[0].aiType = WAITANDGO;
+    state.enemies[0].textureID = fastEnemyTextureID;
+    state.enemies[0].position = glm::vec3(1, -5, 0);
+    state.enemies[0].speed = 2.3;
+    state.enemies[0].acceleration = glm::vec3(0, 0, 0);
+    state.enemies[0].aiType = STUCK;
     state.enemies[0].aiState = IDLE;
 
     mode = PLAY;
@@ -98,7 +98,7 @@ void Level2::playJumpSound() {
 void Level2::Render(ShaderProgram* program) {
     state.map->Render(program);
     for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
-        state.enemies->Render(program);
+        state.enemies[i].Render(program);
     }
     
     state.player->Render(program);
@@ -135,7 +135,11 @@ int Level2::loseLife() {
     if (getLives() == 0) loseGame();
     else {
         state.player->position = glm::vec3(5, 0, 0);
-        //state.enemies[0].position = glm::vec3(1, 0, 0);
+        for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
+            state.enemies[i].isActive = true;
+            state.enemies[i].aiState = IDLE;
+        }
+        state.enemies[0].position = glm::vec3(1, -5, 0);
     }
     return state.lives;
 }

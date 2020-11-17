@@ -2,18 +2,18 @@
 
 #define LEVEL1_ENEMY_COUNT 1
 
-#define LEVEL1_WIDTH 14
+#define LEVEL1_WIDTH 24
 #define LEVEL1_HEIGHT 8
 unsigned int level1_data[] =
 {
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0,
- 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
- 3, 1, 1, 1, 1, 1, 1, 1, 0, 2, 2, 2, 2, 2,
- 3, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2
+ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 3, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 2, 0, 0, 3, 0, 0, 0, 0, 0, 0,
+ 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 2, 0, 2, 3, 0, 0, 0, 0, 0, 0,
+ 3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 2, 0, 0, 0, 0, 1, 3, 1, 1, 1,
+ 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 };
 
 Level1::gameMode mode;
@@ -37,7 +37,7 @@ void Level1::Initialize() {
     // Initialize Player
     state.player = new Entity();
     state.player->entityType = PLAYER;
-    state.player->position = glm::vec3(5, 0, 0);
+    state.player->position = glm::vec3(1, 0, 0);
     state.player->movement = glm::vec3(0);
     state.player->acceleration = glm::vec3(0, -9.81f, 0);
     state.player->speed = 2.0f;
@@ -58,14 +58,14 @@ void Level1::Initialize() {
     state.player->height = 0.8f;
     state.player->width = 0.8f;
 
-    state.player->jumpPower = 6.0f;
+    state.player->jumpPower = 6.5f;
 
     state.enemies = new Entity[LEVEL1_ENEMY_COUNT];
     GLuint enemyTextureID = Util::LoadTexture("ctg.png");
 
     state.enemies[0].entityType = ENEMY;
     state.enemies[0].textureID = enemyTextureID;
-    state.enemies[0].position = glm::vec3(1, 0, 0);
+    state.enemies[0].position = glm::vec3(7, -5, 0);
     state.enemies[0].speed = 1;
     state.enemies[0].acceleration = glm::vec3(0, -9.81f, 0);
     state.enemies[0].aiType = WAITANDGO;
@@ -87,7 +87,7 @@ void Level1::Update(float deltaTime) {
     if (state.player->position.y < -8.1f || collisionObj != -1) loseLife(); 
 
     //triggers moving to next scene
-    if (state.player->position.x >= 12) {
+    if (state.player->position.x >= 20) { //12) {
         state.nextScene = 2;
     }
 }
@@ -99,7 +99,7 @@ void Level1::playJumpSound() {
 void Level1::Render(ShaderProgram* program) {
 	state.map->Render(program);
     for (int i = 0; i < LEVEL1_ENEMY_COUNT; i++) {
-        state.enemies->Render(program);
+        state.enemies[i].Render(program);
     }
 
     state.player->Render(program);
@@ -133,8 +133,12 @@ int Level1::loseLife() {
     
     if (getLives() == 0) loseGame();
     else {
-        state.player->position = glm::vec3(5, 0, 0);
-        //state.enemies[0].position = glm::vec3(1, 0, 0);
+        state.player->position = glm::vec3(1, 0, 0);
+        for (int i = 0; i < LEVEL1_ENEMY_COUNT; i++) {
+            state.enemies[i].isActive = true;
+            state.enemies[i].aiState = IDLE;
+        }
+        state.enemies[0].position = glm::vec3(7, -5, 0);
     }
     return state.lives;
 }

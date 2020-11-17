@@ -94,7 +94,7 @@ void Menu::playJumpSound() {
 void Menu::Render(ShaderProgram* program) {
     state.map->Render(program);
     for (int i = 0; i < Menu_ENEMY_COUNT; i++) {
-        state.enemies->Render(program);
+        state.enemies[i].Render(program);
     }
 
     Util::DrawText(program, fontTextureID, "Jump Man", 0.75f, -0.25f, glm::vec3(3.5f, -2.25f, 0));
