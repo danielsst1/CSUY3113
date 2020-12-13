@@ -20,7 +20,8 @@
 struct GameState {
 	Map* map;
 	Entity* player;
-	Entity* enemies;
+	Entity* humans;
+	Entity* rocks;
 	int nextScene;
 	int sceneNum;
 	int lives;
@@ -30,7 +31,7 @@ struct GameState {
 class Scene {
 public:
 	Mix_Music* music;
-	Mix_Chunk* jump;
+	Mix_Chunk* found;
 
 	GLuint fontTextureID;
 

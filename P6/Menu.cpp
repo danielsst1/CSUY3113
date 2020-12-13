@@ -25,7 +25,7 @@ void Menu::Initialize() {
     Mix_PlayMusic(music, -1);
     Mix_VolumeMusic(MIX_MAX_VOLUME * 0.10f);
 
-    jump = Mix_LoadWAV("bounce.wav");
+    found = Mix_LoadWAV("bounce.wav");
     state.nextScene = -1;
 
     GLuint mapTextureID = Util::LoadTexture("tileset.png");
@@ -60,25 +60,25 @@ void Menu::Initialize() {
 
     state.player->jumpPower = 5.0f;
 
-    state.enemies = new Entity[Menu_ENEMY_COUNT];
+    state.humans = new Entity[Menu_ENEMY_COUNT];
     GLuint enemyTextureID = Util::LoadTexture("ctg.png");
 
-    //state.enemies[0].entityType = ENEMY;
-    //state.enemies[0].textureID = enemyTextureID;
-    //state.enemies[0].position = glm::vec3(1, 0, 0);
-    //state.enemies[0].speed = 1;
-    //state.enemies[0].acceleration = glm::vec3(0, -9.81f, 0);
-    //state.enemies[0].aiType = WAITANDGO;
-    //state.enemies[0].aiState = IDLE;
+    //state.humans[0].entityType = ENEMY;
+    //state.humans[0].textureID = enemyTextureID;
+    //state.humans[0].position = glm::vec3(1, 0, 0);
+    //state.humans[0].speed = 1;
+    //state.humans[0].acceleration = glm::vec3(0, -9.81f, 0);
+    //state.humans[0].aiType = WAITANDGO;
+    //state.humans[0].aiState = IDLE;
 
     stopMotion();
 }
 
 void Menu::Update(float deltaTime) {
-    state.player->Update(deltaTime, state.player, state.enemies, Menu_ENEMY_COUNT, state.map);
+    state.player->Update(deltaTime, state.player, state.humans, Menu_ENEMY_COUNT, state.map);
 
     for (int i = 0; i < Menu_ENEMY_COUNT; i++) {
-        state.enemies[i].Update(deltaTime, state.player, state.enemies, Menu_ENEMY_COUNT, state.map);
+        state.humans[i].Update(deltaTime, state.player, state.humans, Menu_ENEMY_COUNT, state.map);
     }
 
     //triggers moving to next scene
@@ -88,13 +88,13 @@ void Menu::Update(float deltaTime) {
 }
 
 void Menu::playJumpSound() {
-    Mix_PlayChannel(-1, jump, 0);
+    //Mix_PlayChannel(-1, jump, 0);
 }
 
 void Menu::Render(ShaderProgram* program) {
     state.map->Render(program);
     for (int i = 0; i < Menu_ENEMY_COUNT; i++) {
-        state.enemies[i].Render(program);
+        state.humans[i].Render(program);
     }
 
     Util::DrawText(program, fontTextureID, "My Favorite Human", 0.75f, -0.25f, glm::vec3(3.5f, -2.25f, 0));
@@ -138,6 +138,6 @@ void Menu::stopMotion() {
     state.player->jumpPower = 0;
 
     for (int i = 0; i < Menu_ENEMY_COUNT; i++) {
-        state.enemies->speed = 0;
+        state.humans->speed = 0;
     }
 }

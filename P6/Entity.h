@@ -69,6 +69,8 @@ public:
     void CheckCollisionsX(Map* map);
     
     int Update(float deltaTime, Entity *player, Entity* objects, int objectCount, Map *map);
+    void checkRockContact(float deltaTime, Entity* player, Entity* objects, int objectCount, Map* map);
+
     void Render(ShaderProgram* program);
     void DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index);
 
@@ -78,4 +80,5 @@ public:
     void AIWaitAndGoVertical(Entity* player);
     void AIStuck(Entity* player);
     void killAI();
+    void removeRock();
 };

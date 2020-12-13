@@ -275,6 +275,11 @@ void Entity::killAI() {
     //aiState = DEAD;
     isActive = false;
 }
+
+void Entity::removeRock() {
+    isActive = false;
+}
+
 // returns the index of the object collided with - if no collision returns -1
 int Entity::Update(float deltaTime, Entity *player, Entity *objects, int objectCount, Map *map)
 {
@@ -339,18 +344,57 @@ int Entity::Update(float deltaTime, Entity *player, Entity *objects, int objectC
     if (entityType == PLAYER) {
         int collisionObj;
         if (xCollision != -1) {
-
+            //objects[xCollision].removeRock();
             objects[xCollision].killAI();
             return xCollision;
         }
         else if (yCollision != -1) {
-
+            //objects[yCollision].removeRock();
             objects[yCollision].killAI();
             return yCollision;
         }
     }
 
     return -1;
+}
+
+void Entity::checkRockContact(float deltaTime, Entity* player, Entity* objects, int objectCount, Map* map) 
+{
+    if (isActive == false) return;
+
+    collidedTop = false;
+    collidedBottom = false;
+    collidedLeft = false;
+    collidedRight = false;
+
+    int yCollision, xCollision;
+    if (entityType == PLAYER) {
+        //enemy collision
+        yCollision = CheckCollisionsY(objects, objectCount); // Fix if needed
+
+        //enemy collision
+        xCollision = CheckCollisionsX(objects, objectCount); // Fix if needed
+    }
+
+    modelMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::translate(modelMatrix, position);
+
+    if (entityType == PLAYER) {
+        int collisionObj;
+        if (xCollision != -1) {
+            
+            //need to check where player collided with block
+            //check if there is stuff on the other side of block
+            //if there isnt stuff then move block
+
+            return;
+        }
+        else if (yCollision != -1) {
+            //objects[yCollision].removeRock();
+            objects[yCollision].killAI();
+            return;
+        }
+    }
 }
 
 void Entity::DrawSpriteFromTextureAtlas(ShaderProgram* program, GLuint textureID, int index)
