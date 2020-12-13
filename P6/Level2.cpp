@@ -233,3 +233,9 @@ void Level2::loseGame() {
     stopMotion();
     mode = LOSE;
 }
+
+int Level2::getRemainingTime() {
+    float time = state.endTime - SDL_GetTicks();
+    time = round(time / 1000);
+    return(time);
+}

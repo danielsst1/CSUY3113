@@ -26,6 +26,8 @@ struct GameState {
 	int sceneNum;
 	int lives;
 	int humansFound;
+	float endTime;
+	float currTime;
 };
 
 class Scene {
@@ -50,4 +52,6 @@ public:
 	virtual int findHuman() = 0;
 
 	virtual void stopMotion() = 0;
+
+	virtual int getRemainingTime() = 0;
 };

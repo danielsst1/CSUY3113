@@ -20,4 +20,6 @@ public:
 
 	void stopMotion();
 	void loseGame();
+
+	int getRemainingTime();
 };

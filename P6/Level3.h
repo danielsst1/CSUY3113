@@ -21,4 +21,6 @@ public:
 	void stopMotion();
 	void winGame();
 	void loseGame();
+
+	int getRemainingTime();
 };

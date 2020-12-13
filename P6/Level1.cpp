@@ -24,6 +24,10 @@ Level1::gameMode mode;
 void Level1::Initialize() {
     state.sceneNum = 1;
 
+    float levelTime = 120000; //120000ms = 120sec
+
+    state.endTime = SDL_GetTicks() + levelTime;
+
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
     music = Mix_LoadMUS("pokemon-center.mp3");
     Mix_PlayMusic(music, -1);
@@ -198,12 +202,16 @@ void Level1::Render(ShaderProgram* program) {
         Util::DrawText(program, fontTextureID, "Found: " + std::to_string(getHumansFound()) + "/" + std::to_string(LEVEL1_HUMAN_COUNT) + " Humans", 0.5f, -0.25f, glm::vec3(state.player->position.x - 2.0f, -0.5f, 0));
         Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(state.player->position.x + 3.0f, -0.5f, 0));
 
+        if (mode == PLAY) Util::DrawText(program, fontTextureID, "Time: " + std::to_string(getRemainingTime()), 0.5f, -0.25f, glm::vec3(state.player->position.x - 4.5f, -1.5f, 0));
+
         if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(state.player->position.x - 1.5f, -2.5f, 0));
     }
     else {
         Util::DrawText(program, fontTextureID, "Level 1", 0.5f, -0.25f, glm::vec3(0.5f, -0.5f, 0));
         Util::DrawText(program, fontTextureID, "Found: " + std::to_string(getHumansFound()) + "/" + std::to_string(LEVEL1_HUMAN_COUNT) + " Humans", 0.5f, -0.25f, glm::vec3(3.0f, -0.5f, 0));
         Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(8.0f, -0.5f, 0));
+
+        if (mode == PLAY) Util::DrawText(program, fontTextureID, "Time: " + std::to_string(getRemainingTime()), 0.5f, -0.25f, glm::vec3(0.5f, -1.5f, 0));
 
         if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(3.5f, -2.5f, 0));
     }	
@@ -249,7 +257,7 @@ int Level1::findHuman() {
    
     Mix_PlayChannel(sfxChannel, found, 0);
    
-    //stop movement and time while sound is played
+    //stop movement while sound is played
     while (Mix_Playing(sfxChannel) != 0) {
         Mix_PauseMusic();
         state.player->StopMovement();
@@ -257,12 +265,17 @@ int Level1::findHuman() {
             state.humans->StopMovement();
         }
     }
-    //resume movement and time
+    //resume movement
+
     state.player->speed = PLAYER_SPEED;
     for (int i = 0; i < LEVEL1_HUMAN_COUNT; i++) {
         state.humans->speed = HUMAN_SPEED;
     }
     Mix_ResumeMusic();
+
+    //add time to make up for pause
+    int approxSfxTime = 4000; //sound effect time is about 4000ms
+    state.endTime += approxSfxTime;
 
     return state.humansFound;
 }
@@ -277,7 +290,13 @@ void Level1::stopMotion() {
 
 void Level1::loseGame() {
     stopMotion();
+    Mix_HaltMusic();
     mode = LOSE;
-    Mix_FreeChunk(found);
-    Mix_FreeMusic(music);
+}
+
+int Level1::getRemainingTime() {
+    float time = state.endTime - SDL_GetTicks();
+    time = round(time / 1000);
+    if (time == 0) loseGame();
+    return(time);
 }

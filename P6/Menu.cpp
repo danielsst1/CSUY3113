@@ -97,7 +97,7 @@ void Menu::Render(ShaderProgram* program) {
         state.humans[i].Render(program);
     }
 
-    Util::DrawText(program, fontTextureID, "My Favorite Human", 0.75f, -0.25f, glm::vec3(3.5f, -2.25f, 0));
+    Util::DrawText(program, fontTextureID, "My Favorite Human", 0.75f, -0.25f, glm::vec3(1.0f, -2.25f, 0));
     Util::DrawText(program, fontTextureID, "Press 'Enter' to start", 0.5f, -0.25f, glm::vec3(2.6f, -3.0f, 0));
     Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(state.lives), 0.5f, -0.25f, glm::vec3(state.player->position.x + 3.0f, -0.5f, 0));
 
@@ -140,4 +140,10 @@ void Menu::stopMotion() {
     for (int i = 0; i < Menu_ENEMY_COUNT; i++) {
         state.humans->speed = 0;
     }
+}
+
+int Menu::getRemainingTime() {
+    float time = state.endTime - SDL_GetTicks();
+    time = round(time / 1000);
+    return(time);
 }
