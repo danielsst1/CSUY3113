@@ -45,20 +45,22 @@ void SwitchToScene(Scene* scene) {
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO);
     displayWindow = SDL_CreateWindow("Jump Man", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
+    //displayWindow = SDL_CreateWindow("Jump Man", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 960, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
 
 #ifdef _WINDOWS
     glewInit();
 #endif
-
     glViewport(0, 0, 640, 480);
+    //glViewport(0, 0, 1280, 960);
 
     program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
 
     viewMatrix = glm::mat4(1.0f);
     modelMatrix = glm::mat4(1.0f);
     projectionMatrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
+    //projectionMatrix = glm::ortho(-10.0f, 10.0f, -7.5f, 7.5f, -1.0f, 1.0f);
 
     program.SetProjectionMatrix(projectionMatrix);
     program.SetViewMatrix(viewMatrix);
@@ -128,6 +130,14 @@ void ProcessInput() {
     else if (keys[SDL_SCANCODE_RIGHT]) {
         currentScene->state.player->movement.x = 1.0f;
         currentScene->state.player->animIndices = currentScene->state.player->animRight;
+    }
+    else if (keys[SDL_SCANCODE_UP]) {
+        currentScene->state.player->movement.y = 1.0f;
+        currentScene->state.player->animIndices = currentScene->state.player->animUp;
+    }
+    else if (keys[SDL_SCANCODE_DOWN]) {
+        currentScene->state.player->movement.y = -1.0f;
+        currentScene->state.player->animIndices = currentScene->state.player->animDown;
     }
 
 

@@ -1,6 +1,6 @@
 #include "Level2.h"
 
-#define LEVEL2_ENEMY_COUNT 1
+#define LEVEL2_HUMAN_COUNT 0
 
 #define LEVEL2_WIDTH 18
 #define LEVEL2_HEIGHT 8
@@ -60,26 +60,18 @@ void Level2::Initialize() {
 
     state.player->jumpPower = 6.5f;
 
-    state.enemies = new Entity[LEVEL2_ENEMY_COUNT];
-    GLuint fastEnemyTextureID = Util::LoadTexture("ship.png");
-
-    state.enemies[0].entityType = ENEMY;
-    state.enemies[0].textureID = fastEnemyTextureID;
-    state.enemies[0].position = glm::vec3(1, -5, 0);
-    state.enemies[0].speed = 2.3;
-    state.enemies[0].acceleration = glm::vec3(0, 0, 0);
-    state.enemies[0].aiType = STUCK;
-    state.enemies[0].aiState = IDLE;
+    state.enemies = new Entity[LEVEL2_HUMAN_COUNT];
+    GLuint fastHUMANTextureID = Util::LoadTexture("ship.png");
 
     mode = PLAY;
 }
 void Level2::Update(float deltaTime) {
     int collisionObj;
 
-    collisionObj = state.player->Update(deltaTime, state.player, state.enemies, LEVEL2_ENEMY_COUNT, state.map);
+    collisionObj = state.player->Update(deltaTime, state.player, state.enemies, LEVEL2_HUMAN_COUNT, state.map);
 
-    for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
-        state.enemies[i].Update(deltaTime, state.player, state.enemies, LEVEL2_ENEMY_COUNT, state.map);
+    for (int i = 0; i < LEVEL2_HUMAN_COUNT; i++) {
+        state.enemies[i].Update(deltaTime, state.player, state.enemies, LEVEL2_HUMAN_COUNT, state.map);
     }
 
     //fall off map bottom = -8.1
@@ -97,7 +89,7 @@ void Level2::playJumpSound() {
 
 void Level2::Render(ShaderProgram* program) {
     state.map->Render(program);
-    for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
+    for (int i = 0; i < LEVEL2_HUMAN_COUNT; i++) {
         state.enemies[i].Render(program);
     }
     
@@ -135,7 +127,7 @@ int Level2::loseLife() {
     if (getLives() == 0) loseGame();
     else {
         state.player->position = glm::vec3(5, 0, 0);
-        for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
+        for (int i = 0; i < LEVEL2_HUMAN_COUNT; i++) {
             state.enemies[i].isActive = true;
             state.enemies[i].aiState = IDLE;
         }
@@ -144,10 +136,24 @@ int Level2::loseLife() {
     return state.lives;
 }
 
+int Level2::setHumansFound(int num) {
+    state.humansFound = num;
+    return state.humansFound;
+}
+
+int Level2::getHumansFound() {
+    return state.humansFound;
+}
+
+int Level2::findHuman() {
+    state.humansFound++;
+    return state.humansFound;
+}
+
 void Level2::stopMotion() {
     state.player->StopMovement();
 
-    for (int i = 0; i < LEVEL2_ENEMY_COUNT; i++) {
+    for (int i = 0; i < LEVEL2_HUMAN_COUNT; i++) {
         state.enemies->StopMovement();
     }
 }

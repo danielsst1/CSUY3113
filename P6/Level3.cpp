@@ -1,6 +1,6 @@
 #include "Level3.h"
 
-#define LEVEL3_ENEMY_COUNT 2
+#define LEVEL3_HUMAN_COUNT 0
 
 #define Level3_WIDTH 27
 #define Level3_HEIGHT 8
@@ -60,25 +60,9 @@ void Level3::Initialize() {
 
     state.player->jumpPower = 6.5f;
 
-    state.enemies = new Entity[LEVEL3_ENEMY_COUNT];
-    GLuint enemyTextureID = Util::LoadTexture("ctg.png");
-    GLuint fastEnemyTextureID = Util::LoadTexture("ship.png");
-
-    state.enemies[0].entityType = ENEMY;
-    state.enemies[0].textureID = enemyTextureID;
-    state.enemies[0].position = glm::vec3(1, -3, 0);
-    state.enemies[0].speed = 1;
-    state.enemies[0].acceleration = glm::vec3(0, -9.81f, 0);
-    state.enemies[0].aiType = WAITANDGO;
-    state.enemies[0].aiState = IDLE;
-
-    state.enemies[1].entityType = ENEMY;
-    state.enemies[1].textureID = fastEnemyTextureID;
-    state.enemies[1].position = glm::vec3(6, -6, 0);
-    state.enemies[1].speed = 2.5;
-    state.enemies[1].acceleration = glm::vec3(0, 0, 0);
-    state.enemies[1].aiType = STUCK;
-    state.enemies[1].aiState = IDLE;
+    state.enemies = new Entity[LEVEL3_HUMAN_COUNT];
+    GLuint HUMANTextureID = Util::LoadTexture("ctg.png");
+    GLuint fastHUMANTextureID = Util::LoadTexture("ship.png");
 
     mode = PLAY;
 }
@@ -86,10 +70,10 @@ void Level3::Initialize() {
 void Level3::Update(float deltaTime) {
     int collisionObj;
 
-    collisionObj = state.player->Update(deltaTime, state.player, state.enemies, LEVEL3_ENEMY_COUNT, state.map);
+    collisionObj = state.player->Update(deltaTime, state.player, state.enemies, LEVEL3_HUMAN_COUNT, state.map);
 
-    for (int i = 0; i < LEVEL3_ENEMY_COUNT; i++) {
-        state.enemies[i].Update(deltaTime, state.player, state.enemies, LEVEL3_ENEMY_COUNT, state.map);
+    for (int i = 0; i < LEVEL3_HUMAN_COUNT; i++) {
+        state.enemies[i].Update(deltaTime, state.player, state.enemies, LEVEL3_HUMAN_COUNT, state.map);
     }
 
     //fall off map bottom = -8.1
@@ -108,7 +92,7 @@ void Level3::playJumpSound() {
 
 void Level3::Render(ShaderProgram* program) {
     state.map->Render(program);
-    for (int i = 0; i < LEVEL3_ENEMY_COUNT; i++) {
+    for (int i = 0; i < LEVEL3_HUMAN_COUNT; i++) {
         state.enemies[i].Render(program);
     }
     
@@ -146,7 +130,7 @@ int Level3::loseLife() {
     if (getLives() == 0) loseGame();
     else {
         state.player->position = glm::vec3(4, -6, 0);
-        for (int i = 0; i < LEVEL3_ENEMY_COUNT; i++) {
+        for (int i = 0; i < LEVEL3_HUMAN_COUNT; i++) {
             state.enemies[i].isActive = true;
             state.enemies[i].aiState = IDLE;
         }
@@ -156,10 +140,24 @@ int Level3::loseLife() {
     return state.lives;
 }
 
+int Level3::setHumansFound(int num) {
+    state.humansFound = num;
+    return state.humansFound;
+}
+
+int Level3::getHumansFound() {
+    return state.humansFound;
+}
+
+int Level3::findHuman() {
+    state.humansFound++;
+    return state.humansFound;
+}
+
 void Level3::stopMotion() {
     state.player->StopMovement();
 
-    for (int i = 0; i < LEVEL3_ENEMY_COUNT; i++) {
+    for (int i = 0; i < LEVEL3_HUMAN_COUNT; i++) {
         state.enemies->StopMovement();
     }
 }

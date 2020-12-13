@@ -13,9 +13,9 @@
 #include "ShaderProgram.h"
 #include "Map.h"
 
-enum EntityType {PLAYER, PLATFORM, ENEMY};
+enum EntityType {PLAYER, PLATFORM, HUMAN};
 
-enum AIType { WALKER, WAITANDGO, STUCK };
+enum AIType { WALKER, WAITANDGOHORIZONTAL, WAITANDGOVERTICAL, STUCK };
 enum AIState { IDLE, WALKING, ATTACKING, DEAD };
 
 class Entity {
@@ -74,7 +74,8 @@ public:
 
     void AI(Entity *player);
     void AIWalker(Entity* player);
-    void AIWaitAndGo(Entity *player);
+    void AIWaitAndGoHorizontal(Entity *player);
+    void AIWaitAndGoVertical(Entity* player);
     void AIStuck(Entity* player);
     void killAI();
 };

@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-#define Menu_ENEMY_COUNT 1
+#define Menu_ENEMY_COUNT 0
 
 #define Menu_WIDTH 14
 #define Menu_HEIGHT 8
@@ -37,7 +37,7 @@ void Menu::Initialize() {
     // Initialize Player
     state.player = new Entity();
     state.player->entityType = PLAYER;
-    state.player->position = glm::vec3(5, 0, 0);
+    state.player->position = glm::vec3(5, -5, 0);
     state.player->movement = glm::vec3(0);
     state.player->acceleration = glm::vec3(0, -9.81f, 0);
     state.player->speed = 2.0f;
@@ -63,13 +63,13 @@ void Menu::Initialize() {
     state.enemies = new Entity[Menu_ENEMY_COUNT];
     GLuint enemyTextureID = Util::LoadTexture("ctg.png");
 
-    state.enemies[0].entityType = ENEMY;
-    state.enemies[0].textureID = enemyTextureID;
-    state.enemies[0].position = glm::vec3(1, 0, 0);
-    state.enemies[0].speed = 1;
-    state.enemies[0].acceleration = glm::vec3(0, -9.81f, 0);
-    state.enemies[0].aiType = WAITANDGO;
-    state.enemies[0].aiState = IDLE;
+    //state.enemies[0].entityType = ENEMY;
+    //state.enemies[0].textureID = enemyTextureID;
+    //state.enemies[0].position = glm::vec3(1, 0, 0);
+    //state.enemies[0].speed = 1;
+    //state.enemies[0].acceleration = glm::vec3(0, -9.81f, 0);
+    //state.enemies[0].aiType = WAITANDGO;
+    //state.enemies[0].aiState = IDLE;
 
     stopMotion();
 }
@@ -97,7 +97,7 @@ void Menu::Render(ShaderProgram* program) {
         state.enemies[i].Render(program);
     }
 
-    Util::DrawText(program, fontTextureID, "Jump Man", 0.75f, -0.25f, glm::vec3(3.5f, -2.25f, 0));
+    Util::DrawText(program, fontTextureID, "My Favorite Human", 0.75f, -0.25f, glm::vec3(3.5f, -2.25f, 0));
     Util::DrawText(program, fontTextureID, "Press 'Enter' to start", 0.5f, -0.25f, glm::vec3(2.6f, -3.0f, 0));
     Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(state.lives), 0.5f, -0.25f, glm::vec3(state.player->position.x + 3.0f, -0.5f, 0));
 
@@ -117,6 +117,20 @@ int Menu::loseLife() {
     state.lives--;
     return state.lives;
     //if (lives == 0) gameOver();
+}
+
+int Menu::setHumansFound(int num) {
+    state.humansFound = num;
+    return state.humansFound;
+}
+
+int Menu::getHumansFound() {
+    return state.humansFound;
+}
+
+int Menu::findHuman() {
+    state.humansFound++;
+    return state.humansFound;
 }
 
 void Menu::stopMotion() {

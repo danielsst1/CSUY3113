@@ -14,6 +14,10 @@ public:
 	int getLives();
 	int loseLife();
 
+	int setHumansFound(int num);
+	int getHumansFound();
+	int findHuman();
+
 	void stopMotion();
 	void loseGame();
 };

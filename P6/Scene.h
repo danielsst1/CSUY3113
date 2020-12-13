@@ -24,6 +24,7 @@ struct GameState {
 	int nextScene;
 	int sceneNum;
 	int lives;
+	int humansFound;
 };
 
 class Scene {
@@ -42,6 +43,10 @@ public:
 	virtual int setLives(int num) = 0;
 	virtual int getLives() = 0;
 	virtual int loseLife() = 0;
+
+	virtual int setHumansFound(int num) = 0;
+	virtual int getHumansFound() = 0;
+	virtual int findHuman() = 0;
 
 	virtual void stopMotion() = 0;
 };

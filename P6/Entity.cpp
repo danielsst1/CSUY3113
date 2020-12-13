@@ -164,7 +164,7 @@ void Entity::AIWalker(Entity* player) {
     }
 }
 
-void Entity::AIWaitAndGo(Entity* player) {
+void Entity::AIWaitAndGoHorizontal(Entity* player) {
     switch (aiState)
     {
     case IDLE:
@@ -175,14 +175,40 @@ void Entity::AIWaitAndGo(Entity* player) {
         break;
 
     case WALKING:
-        /*if (abs(player->position.x - position.x) <= 1.0f) {
-            aiState = IDLE;
-        }*/
         if (player->position.x < position.x) {
             movement = glm::vec3(-1, 0, 0);
         }
-        else {
+        else if (player->position.x > position.x) {
             movement = glm::vec3(1, 0, 0);
+        }
+        break;
+
+    case ATTACKING:
+        break;
+
+    case DEAD:
+        movement = glm::vec3(0, 0, 0);
+        //default:
+        //    break;
+    }
+}
+
+void Entity::AIWaitAndGoVertical(Entity* player) {
+    switch (aiState)
+    {
+    case IDLE:
+        movement = glm::vec3(0, 0, 0);
+        if (glm::distance(position, player->position) < 3.0f) { // && glm::distance(position, player->position) > 1.0f) {
+            aiState = WALKING;
+        }
+        break;
+
+    case WALKING:
+        if (player->position.y < position.y) {
+            movement = glm::vec3(0, -1, 0);
+        }
+        else if (player->position.y > position.y) {
+            movement = glm::vec3(0, 1, 0);
         }
         break;
 
@@ -232,8 +258,12 @@ void Entity::AI(Entity* player) {
         AIWalker(player);
         break;
 
-    case WAITANDGO:
-        AIWaitAndGo(player);
+    case WAITANDGOHORIZONTAL:
+        AIWaitAndGoHorizontal(player);
+        break;
+
+    case WAITANDGOVERTICAL:
+        AIWaitAndGoVertical(player);
         break;
 
     case STUCK:
@@ -255,7 +285,7 @@ int Entity::Update(float deltaTime, Entity *player, Entity *objects, int objectC
     collidedLeft = false;
     collidedRight = false;
 
-    if (entityType == ENEMY) {
+    if (entityType == HUMAN) {
         AI(player);
     }
 
@@ -284,6 +314,7 @@ int Entity::Update(float deltaTime, Entity *player, Entity *objects, int objectC
     }
 
     velocity.x = movement.x * speed;
+    velocity.y = movement.y * speed;
     velocity += acceleration * deltaTime;
 
     position.y += velocity.y * deltaTime; // Move on Y
@@ -306,8 +337,17 @@ int Entity::Update(float deltaTime, Entity *player, Entity *objects, int objectC
     modelMatrix = glm::translate(modelMatrix, position);
 
     if (entityType == PLAYER) {
-        if (xCollision != -1 || (yCollision != -1 && collidedTop)) return xCollision;
-        else if (yCollision != -1) objects[yCollision].killAI();
+        int collisionObj;
+        if (xCollision != -1) {
+
+            objects[xCollision].killAI();
+            return xCollision;
+        }
+        else if (yCollision != -1) {
+
+            objects[yCollision].killAI();
+            return yCollision;
+        }
     }
 
     return -1;
