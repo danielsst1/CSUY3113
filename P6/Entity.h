@@ -13,7 +13,7 @@
 #include "ShaderProgram.h"
 #include "Map.h"
 
-enum EntityType {PLAYER, PLATFORM, HUMAN};
+enum EntityType {PLAYER, PLATFORM, HUMAN, ROCK};
 
 enum AIType { WALKER, WAITANDGOHORIZONTAL, WAITANDGOVERTICAL, STUCK };
 enum AIState { IDLE, WALKING, ATTACKING, DEAD };

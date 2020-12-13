@@ -48,10 +48,10 @@ void Level1::Initialize() {
     state.player->animUp = new int[4]{ 2, 6, 10, 14 };
     state.player->animDown = new int[4]{ 0, 4, 8, 12 };*/
 
-    state.player->animRight = new int[4]{ 81, 82, 83 };
-    state.player->animLeft = new int[4]{ 69, 70, 71 };
-    state.player->animUp = new int[4]{ 93, 94, 95 };
-    state.player->animDown = new int[4]{ 57, 58, 59 }; 
+    state.player->animRight = new int[3]{ 81, 82, 83 };
+    state.player->animLeft = new int[3]{ 69, 70, 71 };
+    state.player->animUp = new int[3]{ 93, 94, 95 };
+    state.player->animDown = new int[3]{ 57, 58, 59 }; 
 
     state.player->animIndices = state.player->animRight;
     state.player->animFrames = 3; // 4;
@@ -65,8 +65,22 @@ void Level1::Initialize() {
 
     state.player->jumpPower = 6.5f;
 
+    //////////////////////////////////////////////////////////////////////////////////////
+    // initialize enemies
     state.enemies = new Entity[LEVEL1_HUMAN_COUNT];
-    GLuint HUMANTextureID = Util::LoadTexture("ctg.png");
+    GLuint HUMANTextureID = Util::LoadTexture("characters.png");
+
+    state.enemies[0].animRight = new int[3]{ 24, 25, 26 };
+    state.enemies[0].animLeft = new int[3]{ 12, 13, 14 };
+    state.enemies[0].animUp = new int[3]{ 36, 37, 38 };
+    state.enemies[0].animDown = new int[3]{ 0, 1, 2 };
+
+    state.enemies[0].animIndices = state.enemies[0].animRight;
+    state.enemies[0].animFrames = 3; // 4;
+    state.enemies[0].animIndex = 0;
+    state.enemies[0].animTime = 0;
+    state.enemies[0].animCols = 12; //4;
+    state.enemies[0].animRows = 8; //4;
 
     state.enemies[0].entityType = HUMAN;
     state.enemies[0].textureID = HUMANTextureID;
@@ -77,6 +91,20 @@ void Level1::Initialize() {
     state.enemies[0].acceleration = glm::vec3(0, 0.0f, 0);
     state.enemies[0].aiType = WAITANDGOHORIZONTAL;
     state.enemies[0].aiState = IDLE;
+
+    /// //////////////////////////////////////////////////////////////
+    /// ememy2
+    state.enemies[1].animRight = new int[3]{ 24, 25, 26 };
+    state.enemies[1].animLeft = new int[3]{ 12, 13, 14 };
+    state.enemies[1].animUp = new int[3]{ 36, 37, 38 };
+    state.enemies[1].animDown = new int[3]{ 0, 1, 2 };
+
+    state.enemies[1].animIndices = state.enemies[1].animDown;
+    state.enemies[1].animFrames = 3; // 4;
+    state.enemies[1].animIndex = 0;
+    state.enemies[1].animTime = 0;
+    state.enemies[1].animCols = 12; //4;
+    state.enemies[1].animRows = 8; //4;
 
     state.enemies[1].entityType = HUMAN;
     state.enemies[1].textureID = HUMANTextureID;
