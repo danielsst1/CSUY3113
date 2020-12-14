@@ -16,5 +16,6 @@ public:
 	int findHuman();
 
 	void stopMotion();
+	int getLevelWidth();
 	int getRemainingTime();
 };

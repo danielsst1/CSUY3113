@@ -1,23 +1,23 @@
 #include "Level1.h"
 
-#define LEVEL1_HUMAN_COUNT 2
-#define LEVEL1_ROCK_COUNT 1
+#define LEVEL1_HUMAN_COUNT 3
+#define LEVEL1_ROCK_COUNT 6
 
-#define PLAYER_SPEED 1.0f
+#define PLAYER_SPEED 1.5f
 #define HUMAN_SPEED 1.0f
 
-#define LEVEL1_WIDTH 24
+#define LEVEL1_WIDTH 21
 #define LEVEL1_HEIGHT 8
 unsigned int level1_data[] =
-{
- 173, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188,
- 173,   0,   0,   0,   0, 122,   0,   0, 122,   0,   0,   0,   0,   0,   0,   0,   0, 122,   0,   0,   0,   0,   0,   0,  
- 173,   0, 122,   0, 122, 122,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, 122,   0,   0,   0,   0,   0,   0,  
- 173,   0, 122,   0, 122,   0,   0,   0, 122,   0,  33,   0,   0,   0,  33,  33,   0, 122,   0,   0,   0,   0,   0,   0,  
- 173,   0, 170,   0,   0,   0,   0,  33, 122,   0, 122,   0,   0,   0, 122,   0,   0, 122,   0,   0,   0,   0,   0,   0,  
- 173,   0, 186,   0,   0,   0,   0,   0, 122,   0, 122,  33,   0,   0, 122,   0, 122, 122,   0,   0,   0,   0,   0,   0,  
- 173,   0, 170,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
- 173, 122, 186, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122,   3
+{//     1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23
+ 173, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188,// 188, 188, 188,
+ 173,   0,   0,   0,   0, 122,   0,   0,   0,   0,   0,   0,   0,   0, 122,   0,   0,   0,   0, 122, 188,//   0,   0,   0, //-1
+ 173,   0, 122,   0, 122,   0,   0,   0,   0,   0, 170, 122, 122,   0,   0,   0,   0,   0, 122,   0,   0,//   0,   0,   0, //-2
+ 173,   0, 122,   0, 122,   0, 122, 122, 122,   0, 186,   0, 122,   0, 122, 122,   0, 122,   0,   0, 172,//   0,   0,   0, //-3
+ 173,   0, 170,   0,   0,   0, 122,   0, 122,   0,   0,   0,   0,   0, 170,   0,   0, 122,   0,   0, 172,//   0,   0,   0, //-4
+ 173,   0, 186,   0, 170, 170, 170,   0, 122,   0, 122, 122,   0,   0, 186, 122, 122, 122,   0, 122, 172,//   0,   0,   0, //-5
+ 173,   0, 170,   0,   0,   0,   0,   0,   0,   0, 122,   0,   0,   0,   0,   0,   0,   0,   0,   0, 172,//   0,   0,   0, //-6
+ 173, 122, 186, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 172//, 122, 122, 122
 };
 
 Level1::gameMode mode;
@@ -72,8 +72,8 @@ void Level1::Initialize() {
     state.player->animCols = 12; //4;
     state.player->animRows = 8; //4;
 
-    state.player->height = 0.8f;
-    state.player->width = 0.8f;
+    state.player->height = 0.7f;
+    state.player->width = 0.7f;
 
     state.player->jumpPower = 6.5f;
 
@@ -98,14 +98,14 @@ void Level1::Initialize() {
     state.humans[0].textureID = HUMANTextureID;
     state.humans[0].height = 0.8f;
     state.humans[0].width = 0.8f;
-    state.humans[0].position = glm::vec3(7, -1, 0);
+    state.humans[0].position = glm::vec3(15, -4, 0);
     state.humans[0].speed = HUMAN_SPEED;
     state.humans[0].acceleration = glm::vec3(0, 0.0f, 0);
     state.humans[0].aiType = WAITANDGOHORIZONTAL;
     state.humans[0].aiState = IDLE;
 
     /// //////////////////////////////////////////////////////////////
-    /// ememy2
+    /// human2
     state.humans[1].animRight = new int[3]{ 24, 25, 26 };
     state.humans[1].animLeft = new int[3]{ 12, 13, 14 };
     state.humans[1].animUp = new int[3]{ 36, 37, 38 };
@@ -128,6 +128,29 @@ void Level1::Initialize() {
     state.humans[1].aiType = WAITANDGOVERTICAL;
     state.humans[1].aiState = IDLE;
 
+    // human3
+    state.humans[2].animRight = new int[3]{ 24, 25, 26 };
+    state.humans[2].animLeft = new int[3]{ 12, 13, 14 };
+    state.humans[2].animUp = new int[3]{ 36, 37, 38 };
+    state.humans[2].animDown = new int[3]{ 0, 1, 2 };
+
+    state.humans[2].animIndices = state.humans[2].animLeft;
+    state.humans[2].animFrames = 3; // 4;
+    state.humans[2].animIndex = 0;
+    state.humans[2].animTime = 0;
+    state.humans[2].animCols = 12; //4;
+    state.humans[2].animRows = 8; //4;
+
+    state.humans[2].entityType = HUMAN;
+    state.humans[2].textureID = HUMANTextureID;
+    state.humans[2].height = 0.8f;
+    state.humans[2].width = 0.8f;
+    state.humans[2].position = glm::vec3(7, -4, 0);
+    state.humans[2].speed = HUMAN_SPEED;
+    state.humans[2].acceleration = glm::vec3(0, 0.0f, 0);
+    state.humans[2].aiType = WAITANDGOHORIZONTAL;
+    state.humans[2].aiState = IDLE;
+
     //////////////////////////////////////////////////////////////////////////////////////
     // initialize rocks
     state.rocks = new Entity[LEVEL1_ROCK_COUNT];
@@ -145,11 +168,82 @@ void Level1::Initialize() {
     state.rocks[0].textureID = ROCKTextureID;
     state.rocks[0].height = 0.8f;
     state.rocks[0].width = 0.8f;
-    state.rocks[0].position = glm::vec3(1, -2, 0);
-    state.rocks[0].speed = 1;
-    state.rocks[0].acceleration = glm::vec3(0, 0.0f, 0);
-    //state.rocks[0].aiType = WAITANDGOVERTICAL;
-    //state.rocks[0].aiState = IDLE;
+    state.rocks[0].position = glm::vec3(2, -1, 0);
+
+    //rock2
+    state.rocks[1].animRight = new int[1]{ 33 };
+    state.rocks[1].animIndices = state.rocks[1].animRight;
+    state.rocks[1].animFrames = 1; // 4;
+    state.rocks[1].animIndex = 0;
+    state.rocks[1].animTime = 0;
+    state.rocks[1].animCols = 16;
+    state.rocks[1].animRows = 16;
+
+    state.rocks[1].entityType = ROCK;
+    state.rocks[1].textureID = ROCKTextureID;
+    state.rocks[1].height = 0.8f;
+    state.rocks[1].width = 0.8f;
+    state.rocks[1].position = glm::vec3(9, -1, 0);
+
+    //rock3
+    state.rocks[2].animRight = new int[1]{ 33 };
+    state.rocks[2].animIndices = state.rocks[2].animRight;
+    state.rocks[2].animFrames = 1; // 4;
+    state.rocks[2].animIndex = 0;
+    state.rocks[2].animTime = 0;
+    state.rocks[2].animCols = 16;
+    state.rocks[2].animRows = 16;
+
+    state.rocks[2].entityType = ROCK;
+    state.rocks[2].textureID = ROCKTextureID;
+    state.rocks[2].height = 0.8f;
+    state.rocks[2].width = 0.8f;
+    state.rocks[2].position = glm::vec3(9, -2, 0);
+
+    //rock4
+    state.rocks[3].animRight = new int[1]{ 33 };
+    state.rocks[3].animIndices = state.rocks[3].animRight;
+    state.rocks[3].animFrames = 1; // 4;
+    state.rocks[3].animIndex = 0;
+    state.rocks[3].animTime = 0;
+    state.rocks[3].animCols = 16;
+    state.rocks[3].animRows = 16;
+
+    state.rocks[3].entityType = ROCK;
+    state.rocks[3].textureID = ROCKTextureID;
+    state.rocks[3].height = 0.8f;
+    state.rocks[3].width = 0.8f;
+    state.rocks[3].position = glm::vec3(7, -6, 0);
+
+    //rock5
+    state.rocks[4].animRight = new int[1]{ 33 };
+    state.rocks[4].animIndices = state.rocks[4].animRight;
+    state.rocks[4].animFrames = 1; // 4;
+    state.rocks[4].animIndex = 0;
+    state.rocks[4].animTime = 0;
+    state.rocks[4].animCols = 16;
+    state.rocks[4].animRows = 16;
+
+    state.rocks[4].entityType = ROCK;
+    state.rocks[4].textureID = ROCKTextureID;
+    state.rocks[4].height = 0.8f;
+    state.rocks[4].width = 0.8f;
+    state.rocks[4].position = glm::vec3(11, -4, 0);
+
+    //rock5
+    state.rocks[5].animRight = new int[1]{ 33 };
+    state.rocks[5].animIndices = state.rocks[5].animRight;
+    state.rocks[5].animFrames = 1; // 4;
+    state.rocks[5].animIndex = 0;
+    state.rocks[5].animTime = 0;
+    state.rocks[5].animCols = 16;
+    state.rocks[5].animRows = 16;
+
+    state.rocks[5].entityType = ROCK;
+    state.rocks[5].textureID = ROCKTextureID;
+    state.rocks[5].height = 0.8f;
+    state.rocks[5].width = 0.8f;
+    state.rocks[5].position = glm::vec3(18, -5, 0);
 
     mode = PLAY;
 }
@@ -167,7 +261,7 @@ void Level1::Update(float deltaTime) {
     //if (state.player->position.y < -8.1f || collisionObj != -1) loseLife();
     if (collisionObj != -1) findHuman();
 
-    state.player->Update(deltaTime, state.player, state.rocks, LEVEL1_ROCK_COUNT, state.map);
+    state.player->checkRockContact(deltaTime, state.player, state.rocks, LEVEL1_ROCK_COUNT, state.map);
     for (int i = 0; i < LEVEL1_ROCK_COUNT; i++) {
         state.rocks[i].Update(deltaTime, state.player, state.rocks, LEVEL1_ROCK_COUNT, state.map);
     }
@@ -195,26 +289,27 @@ void Level1::Render(ShaderProgram* program) {
     }
 
     state.player->Render(program);
-    //Util::DrawText(program, fontTextureID, std::to_string(state.player->position.x) + std::to_string(state.player->position.y), 0.5f, -0.25f, glm::vec3(state.player->position.x - 2.0f, -2.5f, 0));
-
-    if (state.player->position.x > 5) {
-        Util::DrawText(program, fontTextureID, "Level 1", 0.5f, -0.25f, glm::vec3(state.player->position.x - 4.5f, -0.5f, 0));
-        Util::DrawText(program, fontTextureID, "Found: " + std::to_string(getHumansFound()) + "/" + std::to_string(LEVEL1_HUMAN_COUNT) + " Humans", 0.5f, -0.25f, glm::vec3(state.player->position.x - 2.0f, -0.5f, 0));
-        Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(state.player->position.x + 3.0f, -0.5f, 0));
-
-        if (mode == PLAY) Util::DrawText(program, fontTextureID, "Time: " + std::to_string(getRemainingTime()), 0.5f, -0.25f, glm::vec3(state.player->position.x - 4.5f, -1.5f, 0));
-
-        if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(state.player->position.x - 1.5f, -2.5f, 0));
+    if (state.player->position.x > 5 && state.player->position.x < (getLevelWidth() - 5)) {
+        showText(program, state.player->position.x);
+    }
+    else if (state.player->position.x <= 5) {
+        //text at front
+        showText(program, 5.0f);
     }
     else {
-        Util::DrawText(program, fontTextureID, "Level 1", 0.5f, -0.25f, glm::vec3(0.5f, -0.5f, 0));
-        Util::DrawText(program, fontTextureID, "Found: " + std::to_string(getHumansFound()) + "/" + std::to_string(LEVEL1_HUMAN_COUNT) + " Humans", 0.5f, -0.25f, glm::vec3(3.0f, -0.5f, 0));
-        Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(8.0f, -0.5f, 0));
-
-        if (mode == PLAY) Util::DrawText(program, fontTextureID, "Time: " + std::to_string(getRemainingTime()), 0.5f, -0.25f, glm::vec3(0.5f, -1.5f, 0));
-
-        if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(3.5f, -2.5f, 0));
+        //text at end
+        showText(program, getLevelWidth() - 5.0f);
     }	
+}
+
+void Level1::showText(ShaderProgram* program, float xVal) {
+    Util::DrawText(program, fontTextureID, "Level 1", 0.5f, -0.25f, glm::vec3(xVal - 4.5f, -0.5f, 0));
+    Util::DrawText(program, fontTextureID, "Found: " + std::to_string(getHumansFound()) + "/" + std::to_string(LEVEL1_HUMAN_COUNT) + " Humans", 0.5f, -0.25f, glm::vec3(xVal - 2.0f, -0.5f, 0));
+    Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(xVal + 3.0f, -0.5f, 0));
+
+    if (mode == PLAY) Util::DrawText(program, fontTextureID, "Time: " + std::to_string(getRemainingTime()), 0.5f, -0.25f, glm::vec3(xVal - 4.5f, -1.5f, 0));
+
+    if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(xVal - 1.5f, -2.5f, 0));
 }
 
 int Level1::setLives(int num) {
@@ -294,9 +389,14 @@ void Level1::loseGame() {
     mode = LOSE;
 }
 
+//return index of furthest right wall
+int Level1::getLevelWidth() {
+    return LEVEL1_WIDTH - 1;
+}
+
 int Level1::getRemainingTime() {
     float time = state.endTime - SDL_GetTicks();
     time = round(time / 1000);
-    if (time == 0) loseGame();
+    //if (time == 0) loseGame();
     return(time);
 }

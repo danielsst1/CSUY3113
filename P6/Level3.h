@@ -20,6 +20,7 @@ public:
 
 	void stopMotion();
 	void winGame();
+	int getLevelWidth();
 	void loseGame();
 
 	int getRemainingTime();

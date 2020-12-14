@@ -276,9 +276,7 @@ void Entity::killAI() {
     isActive = false;
 }
 
-void Entity::removeRock() {
-    isActive = false;
-}
+
 
 // returns the index of the object collided with - if no collision returns -1
 int Entity::Update(float deltaTime, Entity *player, Entity *objects, int objectCount, Map *map)
@@ -358,6 +356,58 @@ int Entity::Update(float deltaTime, Entity *player, Entity *objects, int objectC
     return -1;
 }
 
+void Entity::CheckRockTop(Map* map, Entity* rock)
+{
+    // Probes for tiles
+    glm::vec3 top = glm::vec3(rock->position.x, rock->position.y + 1, rock->position.z);
+
+    float penetration_x = 0;
+    float penetration_y = 0;
+    if ( !(map->IsSolid(top, &penetration_x, &penetration_y)) ) {
+        rock->position.y += 1;
+    }
+}
+
+void Entity::CheckRockBottom(Map* map, Entity* rock)
+{
+    // Probes for tiles
+    glm::vec3 bottom = glm::vec3(rock->position.x, rock->position.y - 1, rock->position.z);
+
+    float penetration_x = 0;
+    float penetration_y = 0;
+    if ( !(map->IsSolid(bottom, &penetration_x, &penetration_y)) ) {
+        rock->position.y -= 1;
+    }
+}
+
+void Entity::CheckRockRight(Map* map, Entity* rock)
+{
+    // Probes for tiles
+    glm::vec3 right = glm::vec3(rock->position.x + 1, rock->position.y, rock->position.z);
+
+    float penetration_x = 0;
+    float penetration_y = 0;
+    if ( !(map->IsSolid(right, &penetration_x, &penetration_y)) ) {
+        rock->position.x += 1;
+    }
+}
+
+void Entity::CheckRockLeft(Map* map, Entity* rock)
+{
+    // Probes for tiles
+    glm::vec3 left = glm::vec3(rock->position.x - 1, rock->position.y, rock->position.z);
+
+    float penetration_x = 0;
+    float penetration_y = 0;
+    if ( !(map->IsSolid(left, &penetration_x, &penetration_y)) ) {
+        rock->position.x -= 1;
+    }
+}
+
+void Entity::pushRock() {
+    isActive = false;
+}
+
 void Entity::checkRockContact(float deltaTime, Entity* player, Entity* objects, int objectCount, Map* map) 
 {
     if (isActive == false) return;
@@ -382,16 +432,24 @@ void Entity::checkRockContact(float deltaTime, Entity* player, Entity* objects, 
     if (entityType == PLAYER) {
         int collisionObj;
         if (xCollision != -1) {
-            
-            //need to check where player collided with block
-            //check if there is stuff on the other side of block
-            //if there isnt stuff then move block
+     
+            if (collidedRight) {
+                CheckRockRight(map, &objects[xCollision]);
+            }
+            else { //collidedLeft
+                CheckRockLeft(map, &objects[xCollision]);
+            }
 
             return;
         }
         else if (yCollision != -1) {
-            //objects[yCollision].removeRock();
-            objects[yCollision].killAI();
+            if (collidedTop) {
+                CheckRockTop(map, &objects[yCollision]);
+            }
+            else { //collidedBottom
+                CheckRockBottom(map, &objects[yCollision]);
+            }
+            //objects[yCollision].pushRock();
             return;
         }
     }

@@ -1,4 +1,5 @@
-﻿  Menu.cpp
-E:\Documents\GameProgramming2020\CSUY3113\P6\Menu.cpp(26,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-E:\Documents\GameProgramming2020\CSUY3113\P6\Menu.cpp(148,12): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+﻿  Level1.cpp
+E:\Documents\GameProgramming2020\CSUY3113\P6\Level1.cpp(34,36): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+E:\Documents\GameProgramming2020\CSUY3113\P6\Level1.cpp(37,43): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+E:\Documents\GameProgramming2020\CSUY3113\P6\Level1.cpp(403,12): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
   P6.vcxproj -> E:\Documents\GameProgramming2020\CSUY3113\P6\Debug\P6.exe

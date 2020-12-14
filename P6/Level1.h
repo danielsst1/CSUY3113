@@ -9,6 +9,7 @@ public:
 	void Update(float deltaTime) override;
 	void playJumpSound() override;
 	void Render(ShaderProgram* program) override;
+	void showText(ShaderProgram* program, float xVal);
 
 	int setLives(int num);
 	int getLives();
@@ -19,6 +20,7 @@ public:
 	int findHuman();
 
 	void stopMotion();
+	int getLevelWidth();
 	void loseGame();
 
 	int getRemainingTime();

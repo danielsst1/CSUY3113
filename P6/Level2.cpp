@@ -234,6 +234,10 @@ void Level2::loseGame() {
     mode = LOSE;
 }
 
+int Level2::getLevelWidth() {
+    return 20;
+}
+
 int Level2::getRemainingTime() {
     float time = state.endTime - SDL_GetTicks();
     time = round(time / 1000);

@@ -52,6 +52,6 @@ public:
 	virtual int findHuman() = 0;
 
 	virtual void stopMotion() = 0;
-
+	virtual int getLevelWidth() = 0;
 	virtual int getRemainingTime() = 0;
 };

@@ -142,6 +142,10 @@ void Menu::stopMotion() {
     }
 }
 
+int Menu::getLevelWidth() {
+    return 20;
+}
+
 int Menu::getRemainingTime() {
     float time = state.endTime - SDL_GetTicks();
     time = round(time / 1000);

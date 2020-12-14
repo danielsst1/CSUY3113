@@ -44,7 +44,7 @@ void SwitchToScene(Scene* scene) {
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO);
-    displayWindow = SDL_CreateWindow("Jump Man", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
+    displayWindow = SDL_CreateWindow("My Favorite Human", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
     //displayWindow = SDL_CreateWindow("Jump Man", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 960, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
@@ -179,11 +179,15 @@ void Update() {
 
     //move with player x position
     viewMatrix = glm::mat4(1.0f);
-    if (currentScene->state.player->position.x > 5) {
+    if (currentScene->state.player->position.x > 5 && currentScene->state.player->position.x < (currentScene->getLevelWidth() - 5)) {
+        //viewMatrix = glm::translate(viewMatrix, glm::vec3(0, 3.75, 0));
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-currentScene->state.player->position.x, 3.75, 0));
     }
-    else {
+    else if (currentScene->state.player->position.x <= 5) {
         viewMatrix = glm::translate(viewMatrix, glm::vec3(-5, 3.75, 0));
+    }
+    else {
+        viewMatrix = glm::translate(viewMatrix, glm::vec3(-(currentScene->getLevelWidth() - 5), 3.75, 0));
     }
 }
 

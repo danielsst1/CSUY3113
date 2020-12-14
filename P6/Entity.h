@@ -67,6 +67,10 @@ public:
     int CheckCollisionsX(Entity* objects, int objectCount);
     void CheckCollisionsY(Map* map);
     void CheckCollisionsX(Map* map);
+    void CheckRockTop(Map* map, Entity* rock);
+    void CheckRockBottom(Map* map, Entity* rock);
+    void CheckRockRight(Map* map, Entity* rock);
+    void CheckRockLeft(Map* map, Entity* rock);
     
     int Update(float deltaTime, Entity *player, Entity* objects, int objectCount, Map *map);
     void checkRockContact(float deltaTime, Entity* player, Entity* objects, int objectCount, Map* map);
@@ -80,5 +84,5 @@ public:
     void AIWaitAndGoVertical(Entity* player);
     void AIStuck(Entity* player);
     void killAI();
-    void removeRock();
+    void pushRock();
 };

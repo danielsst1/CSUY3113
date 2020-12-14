@@ -19,6 +19,7 @@ public:
 	int findHuman();
 
 	void stopMotion();
+	int getLevelWidth();
 	void loseGame();
 
 	int getRemainingTime();
