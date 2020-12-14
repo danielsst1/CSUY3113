@@ -227,9 +227,6 @@ void Entity::AIStuck(Entity* player) {
     {
     case IDLE:
         movement = glm::vec3(0, 0, 0);
-        if (abs(player->position.y - position.y) < 0.5f) {
-            aiState = ATTACKING;
-        }
         break;
     case WALKING:
         break;

@@ -6,18 +6,18 @@
 #define PLAYER_SPEED 1.5f
 #define HUMAN_SPEED 1.0f
 
-#define LEVEL1_WIDTH 21
+#define LEVEL1_WIDTH 22
 #define LEVEL1_HEIGHT 8
 unsigned int level1_data[] =
 {//     1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23
- 173, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188,// 188, 188, 188,
- 173,   0,   0,   0,   0, 122,   0,   0,   0,   0,   0,   0,   0,   0, 122,   0,   0,   0,   0, 122, 188,//   0,   0,   0, //-1
- 173,   0, 122,   0, 122,   0,   0,   0,   0,   0, 170, 122, 122,   0,   0,   0,   0,   0, 122,   0,   0,//   0,   0,   0, //-2
- 173,   0, 122,   0, 122,   0, 122, 122, 122,   0, 186,   0, 122,   0, 122, 122,   0, 122,   0,   0, 172,//   0,   0,   0, //-3
- 173,   0, 170,   0,   0,   0, 122,   0, 122,   0,   0,   0,   0,   0, 170,   0,   0, 122,   0,   0, 172,//   0,   0,   0, //-4
- 173,   0, 186,   0, 170, 170, 170,   0, 122,   0, 122, 122,   0,   0, 186, 122, 122, 122,   0, 122, 172,//   0,   0,   0, //-5
- 173,   0, 170,   0,   0,   0,   0,   0,   0,   0, 122,   0,   0,   0,   0,   0,   0,   0,   0,   0, 172,//   0,   0,   0, //-6
- 173, 122, 186, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 172//, 122, 122, 122
+ 173, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188, 188,// 188, 188,
+ 173,   0,   0,   0,   0, 122,   0,   0,   0,   0,   0,   0,   0,   0, 122,   0,   0,   0,   0, 122, 188,   0,//   0,   0, //-1
+ 173,   0, 122,   0, 122,   0,   0,   0,   0,   0, 170, 122, 122,   0,   0,   0,   0,   0, 122,   0,   0, 122,//   0,   0, //-2
+ 173,   0, 122,   0, 122,   0, 122, 122, 122,   0, 186,   0, 122,   0, 122, 122,   0, 122,   0,   0, 172,   0,//   0,   0, //-3
+ 173,   0, 170,   0,   0,   0, 122,   0, 122,   0,   0,   0,   0,   0, 170,   0,   0, 122,   0,   0, 172,   0,//   0,   0, //-4
+ 173,   0, 186,   0, 170, 170, 170,   0, 122,   0, 122, 122,   0,   0, 186, 122, 122, 122,   0, 122, 172,   0,//   0,   0, //-5
+ 173,   0, 170,   0,   0,   0,   0,   0,   0,   0, 122,   0,   0,   0,   0,   0,   0,   0,   0,   0, 172,   0,//   0,   0, //-6
+ 173, 122, 186, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 172, 122//, 122, 122
 };
 
 Level1::gameMode mode;
@@ -53,12 +53,7 @@ void Level1::Initialize() {
     state.player->movement = glm::vec3(0);
     state.player->acceleration = glm::vec3(0, -0, 0);
     state.player->speed = PLAYER_SPEED;
-    state.player->textureID = Util::LoadTexture("characters.png");//("george_0.png");
-
-    /*state.player->animRight = new int[4]{ 3, 7, 11, 15 };
-    state.player->animLeft = new int[4]{ 1, 5, 9, 13 };
-    state.player->animUp = new int[4]{ 2, 6, 10, 14 };
-    state.player->animDown = new int[4]{ 0, 4, 8, 12 };*/
+    state.player->textureID = Util::LoadTexture("characters.png");
 
     state.player->animRight = new int[3]{ 81, 82, 83 };
     state.player->animLeft = new int[3]{ 69, 70, 71 };
@@ -66,11 +61,11 @@ void Level1::Initialize() {
     state.player->animDown = new int[3]{ 57, 58, 59 }; 
 
     state.player->animIndices = state.player->animRight;
-    state.player->animFrames = 3; // 4;
+    state.player->animFrames = 3;;
     state.player->animIndex = 0;
     state.player->animTime = 0;
-    state.player->animCols = 12; //4;
-    state.player->animRows = 8; //4;
+    state.player->animCols = 12;
+    state.player->animRows = 8;
 
     state.player->height = 0.7f;
     state.player->width = 0.7f;
@@ -267,7 +262,7 @@ void Level1::Update(float deltaTime) {
     }
 
     //triggers moving to next scene
-    if (state.player->position.x >= 20) { //12) {
+    if (state.player->position.x >= getLevelWidth() && getHumansFound() == LEVEL1_HUMAN_COUNT) { //12) {
         Mix_FreeChunk(found);
         Mix_FreeMusic(music);
         state.nextScene = 2;
@@ -304,10 +299,10 @@ void Level1::Render(ShaderProgram* program) {
 
 void Level1::showText(ShaderProgram* program, float xVal) {
     Util::DrawText(program, fontTextureID, "Level 1", 0.5f, -0.25f, glm::vec3(xVal - 4.5f, -0.5f, 0));
-    Util::DrawText(program, fontTextureID, "Found: " + std::to_string(getHumansFound()) + "/" + std::to_string(LEVEL1_HUMAN_COUNT) + " Humans", 0.5f, -0.25f, glm::vec3(xVal - 2.0f, -0.5f, 0));
-    Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(xVal + 3.0f, -0.5f, 0));
+    Util::DrawText(program, fontTextureID, "Found: " + std::to_string(getHumansFound()) + "/" + std::to_string(LEVEL1_HUMAN_COUNT) + " Humans", 0.5f, -0.25f, glm::vec3(xVal - 2.25f, -0.5f, 0));
+    //Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(xVal + 3.0f, -0.5f, 0));
 
-    if (mode == PLAY) Util::DrawText(program, fontTextureID, "Time: " + std::to_string(getRemainingTime()), 0.5f, -0.25f, glm::vec3(xVal - 4.5f, -1.5f, 0));
+    if (mode == PLAY) Util::DrawText(program, fontTextureID, "Time: " + std::to_string(getRemainingTime()), 0.5f, -0.25f, glm::vec3(xVal + 2.75f, -0.5f, 0));//xVal - 4.5f, -1.5f, 0));
 
     if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(xVal - 1.5f, -2.5f, 0));
 }
@@ -391,7 +386,7 @@ void Level1::loseGame() {
 
 //return index of furthest right wall
 int Level1::getLevelWidth() {
-    return LEVEL1_WIDTH - 1;
+    return LEVEL1_WIDTH - 2;
 }
 
 int Level1::getRemainingTime() {
