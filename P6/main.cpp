@@ -19,7 +19,6 @@
 #include "Menu.h"
 #include "Level1.h"
 #include "Level2.h"
-#include "Level3.h"
 
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
@@ -76,7 +75,7 @@ void Initialize() {
 
     sceneList[0] = new Menu();
     sceneList[1] = new Level1();
-    sceneList[2] = new Level3();
+    sceneList[2] = new Level2();
     //sceneList[3] = new Level3();
     SwitchToScene(sceneList[0]);
 

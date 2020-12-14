@@ -3,7 +3,7 @@
 #define LEVEL1_HUMAN_COUNT 3
 #define LEVEL1_ROCK_COUNT 6
 
-#define PLAYER_SPEED 1.5f
+#define PLAYER_SPEED 1.0f
 #define HUMAN_SPEED 1.0f
 
 #define LEVEL1_WIDTH 22
@@ -29,7 +29,7 @@ void Level1::Initialize() {
     state.endTime = SDL_GetTicks() + levelTime;
 
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
-    music = Mix_LoadMUS("pokemon-center.mp3");
+    music = Mix_LoadMUS("cave.mp3");
     Mix_PlayMusic(music, -1);
     Mix_VolumeMusic(MIX_MAX_VOLUME * 0.10f);
 
@@ -300,8 +300,6 @@ void Level1::Render(ShaderProgram* program) {
 void Level1::showText(ShaderProgram* program, float xVal) {
     Util::DrawText(program, fontTextureID, "Level 1", 0.5f, -0.25f, glm::vec3(xVal - 4.5f, -0.5f, 0));
     Util::DrawText(program, fontTextureID, "Found: " + std::to_string(getHumansFound()) + "/" + std::to_string(LEVEL1_HUMAN_COUNT) + " Humans", 0.5f, -0.25f, glm::vec3(xVal - 2.25f, -0.5f, 0));
-    //Util::DrawText(program, fontTextureID, "Lives: " + std::to_string(getLives()), 0.5f, -0.25f, glm::vec3(xVal + 3.0f, -0.5f, 0));
-
     if (mode == PLAY) Util::DrawText(program, fontTextureID, "Time: " + std::to_string(getRemainingTime()), 0.5f, -0.25f, glm::vec3(xVal + 2.75f, -0.5f, 0));//xVal - 4.5f, -1.5f, 0));
 
     if (mode == LOSE) Util::DrawText(program, fontTextureID, "You Lose!", 0.75f, -0.25f, glm::vec3(xVal - 1.5f, -2.5f, 0));
@@ -392,6 +390,6 @@ int Level1::getLevelWidth() {
 int Level1::getRemainingTime() {
     float time = state.endTime - SDL_GetTicks();
     time = round(time / 1000);
-    //if (time == 0) loseGame();
+    if (time == 0) loseGame();
     return(time);
 }
